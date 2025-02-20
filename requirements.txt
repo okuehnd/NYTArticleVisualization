@@ -1,8 +1,0 @@
-ipyd3
-pandas
-pyproj
-ipython
-jupyter
-json
-os
-zipfile
