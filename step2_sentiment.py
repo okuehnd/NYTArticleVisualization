@@ -3,13 +3,14 @@ from transformers import pipeline
 import os
 
 #Find the cleaned file we created in the cleaning step
+
 for root, dirs, files in os.walk("."): 
-    if "nyt-data.csv" in files:
-        data_set_path = os.path.join(root, "nyt-data.csv")
+    if "nyt-metadata.csv" in files:
+        data_set_path = os.path.join(root, "nyt-metadata.csv")
         folder_path = root
         break  
 
-#Open pandas dataframe 
+#Open pandas dataframe
 articles = pd.read_csv(data_set_path)
 
 #Identify file paths for output, tracking, and errors
@@ -54,7 +55,6 @@ for i,(index,row) in enumerate(articles.iloc[last_row:].iterrows(),start = last_
     successful_rows.append(articles.loc[index])
   except Exception as e:
     error_rows.append({'index': index, 'error': str(e)})
-    print("errorINDEX:",index)
   if (i + 1) % chunk_size == 0 or i + 1 == len(articles):  # Save when chunk is complete or at the end
             # Save successful rows to the output CS
     if successful_rows:
@@ -77,5 +77,5 @@ df = pd.read_csv(output_file)
 df.drop_duplicates(inplace = True)
 
 #send 
-df.to_csv(output_file,mode = 'w',header =(0),index = False)
+df.to_csv(output_file,mode = 'w',header = articles.columns,index = False)
 

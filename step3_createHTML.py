@@ -14,22 +14,14 @@ for root, dirs, files in os.walk("."):
 
 articles = pd.read_csv(data_set_path)
 
-#Not necessary, but remove abstract so that the dataset include large text
-articles.drop('abstract',axis = 1, inplace = True)
-
-#Convert dates in dataset to datetime
-articles['pub_date'] = (pd.to_datetime(articles['pub_date'])).dt.year
-
-#Change binary sentiment values to 'Positive'/'Negative'
-articles['sentiment'] = articles['sentiment'].apply(lambda x: "Positive" if x == 1 else "Negative")
-
 #This project does not support a database
 #By the expectation of linearity, we assume that any random sampling
 #of articles will give representative results when considering the 
 #sentiment of a topic or section
 
 #Choose a random sample, change n to change the size of the sample
-articles = articles.sample(n = 600000, random_state = 42)
+if articles.shape[0] > 10000:
+    articles = articles.sample(n = 600000, random_state = 42)
 
 #assign datasource
 data = {
@@ -594,7 +586,6 @@ d3_html_code = f"""
                 <h4 class="text-center"><b>Contributors</b></h3>
                     <h6 class="text-center">Odette Kuehn (odk6560)</h6>
                     <h6 class="text-center">Rosemary Micky (rm6563) </h6>
-                    <h6 class="text-center">Clely Fernandes (cvf9554)</h6>
             </div>
         </div>
     <div>
@@ -1775,6 +1766,7 @@ document.getElementById("defaultOpen").click();
 current_path = os.getcwd()
 file_name = "NYTSentimentVisualization.html"
 full_path = os.path.join(current_path,file_name)
+print("PATH: ", full_path)
 
 with open(full_path, 'w') as f:
     f.write(d3_html_code)
